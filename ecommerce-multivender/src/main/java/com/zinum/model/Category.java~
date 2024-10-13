@@ -27,9 +27,10 @@ public class Category extends BaseEntity {
     String categoryId;
 
     @ManyToOne
+    @JoinColumn(name = "parent_id")
     Category parentCategory;
 
-    @NotNull
+    @Column(nullable = false)
     Integer level;
 
 }

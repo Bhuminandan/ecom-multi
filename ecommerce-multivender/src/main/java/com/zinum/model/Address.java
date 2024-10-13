@@ -50,4 +50,8 @@ public class Address extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    Order order;
 }

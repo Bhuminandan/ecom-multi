@@ -26,10 +26,10 @@ public class VerificationCode extends BaseEntity {
     String email;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @PrimaryKeyJoinColumn(name = "user_id")
     User user;
 
     @OneToOne
-    @JoinColumn(name = "seller_id")
+    @PrimaryKeyJoinColumn(name = "seller_id")
     Seller seller;
 }

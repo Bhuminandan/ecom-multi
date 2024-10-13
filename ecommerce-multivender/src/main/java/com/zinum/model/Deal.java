@@ -23,6 +23,6 @@ public class Deal extends BaseEntity {
     Integer discount;
 
     @OneToOne
-    @JoinColumn(name = "category_id")
+    @PrimaryKeyJoinColumn(name = "category_id")
     HomeCategory category;
 }

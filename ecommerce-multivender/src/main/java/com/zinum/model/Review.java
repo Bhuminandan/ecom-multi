@@ -32,8 +32,8 @@ public class Review  extends BaseEntity {
     @ElementCollection
     List<String> images = new ArrayList<>();
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
 

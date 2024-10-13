@@ -6,7 +6,7 @@
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -24,7 +24,9 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="99905430-63b0-4b73-a7f7-0cc295d0d13d" object-ref="schemas/ecom/tables/addresses" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="99905430-63b0-4b73-a7f7-0cc295d0d13d" />
@@ -37,6 +39,11 @@
         <condition column="next_val" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
+    <filter-actions connection-id="99905430-63b0-4b73-a7f7-0cc295d0d13d" dataset="ecom.addresses" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="99905430-63b0-4b73-a7f7-0cc295d0d13d" dataset="ecom.used_coupons" active-filter-id="EMPTY_FILTER" />
+  </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
@@ -141,7 +148,7 @@
     </connections>
     <browser-settings>
       <general>
-        <display-mode value="TABBED" />
+        <display-mode value="SELECTOR" />
         <navigation-history-size value="100" />
         <show-object-details value="false" />
         <enable-sticky-paths value="true" />

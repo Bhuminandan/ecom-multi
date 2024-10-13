@@ -26,10 +26,11 @@ public class Category extends BaseEntity {
     @Column(nullable = false, unique = true)
     String categoryId;
 
-    @ManyToOne
-    Category parentCategory;
-
     @Column(nullable = false)
     Integer level;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    Category parentCategory;
 
 }

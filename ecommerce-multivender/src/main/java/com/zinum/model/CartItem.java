@@ -25,7 +25,6 @@ public class CartItem extends BaseEntity {
     @JsonIgnore
     Cart cart;
 
-    Product product;
 
     @Column(name = "size", nullable = false)
     String size;
@@ -40,4 +39,8 @@ public class CartItem extends BaseEntity {
     Integer discountedPrice;
 
     long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    Product product;
 }

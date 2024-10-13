@@ -35,13 +35,6 @@ public class Order extends BaseEntity{
     @Column(name = "seller_id")
     Long sellerId;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<OrderItem> orderItems = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    Address shippingAddress;
-
     @Embedded
     PaymentDetails paymentDetails = new PaymentDetails();
 
@@ -58,13 +51,24 @@ public class Order extends BaseEntity{
     @Enumerated(EnumType.STRING)
     OrderStatus orderStatus;
 
-    @Column(name = "payment_status")
+    @Column(name = "current_payment_status")
     @Enumerated(EnumType.STRING)
-    PaymentStatus paymentStatus = PaymentStatus.PENDING;
+    PaymentStatus currentPaymentStatus = PaymentStatus.PENDING;
 
     @Column(name = "order_date")
     LocalDateTime orderDate = LocalDateTime.now();
 
     @Column(name = "delivery_date")
     LocalDateTime deliveryDate = orderDate.plusDays(7);
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderItem> orderItems = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    Address shippingAddress;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_order_id")
+    PaymentOrder payment;
 }

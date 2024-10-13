@@ -55,4 +55,16 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     Set<Review> reviews = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    Set<Order> orders = new HashSet<>();
+
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
+    Set<Transaction> transactions = new HashSet<>();
+
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "wishlist_id")
+    Wishlist wishlist;
 }

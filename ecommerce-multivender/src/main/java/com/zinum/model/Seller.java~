@@ -57,8 +57,7 @@ public class Seller extends BaseEntity {
     @Embedded
     BankDetails bankDetails = new BankDetails();
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
     Address pickupAddress = new Address();
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)

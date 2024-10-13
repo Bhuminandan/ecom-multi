@@ -19,10 +19,6 @@ public class SellerReport extends BaseEntity {
     @Column(name = "id", nullable = false)
     Long id;
 
-    @OneToOne
-    @JoinColumn(name = "seller_id", nullable = false)
-    Seller seller;
-
     @Column(name = "total_earnings", nullable = false)
     Long totalEarnings = 0L;
 
@@ -46,4 +42,9 @@ public class SellerReport extends BaseEntity {
 
     @Column(name = "total_transactions", nullable = false)
     Integer totalTransactions = 0;
+
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "seller_id")
+    Seller seller;
+
 }

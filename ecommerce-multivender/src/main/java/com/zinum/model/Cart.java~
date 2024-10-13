@@ -38,7 +38,7 @@ public class Cart extends BaseEntity {
     String couponCode;
 
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id")
     User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)

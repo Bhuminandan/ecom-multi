@@ -51,6 +51,16 @@ public class Product extends BaseEntity {
 
     int numOfRatings;
 
+    @Column(name = "sizes")
+    String sizes;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Review> reviews = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnore
+    Set<Wishlist> wishlists = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
@@ -58,14 +68,4 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "seller_id")
     Seller seller;
-
-    @Column(name = "sizes")
-    String sizes;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Review> reviews = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "wishlist_products")
-    @JsonIgnore
-    Set<Wishlist> wishlists = new HashSet<>();
 }

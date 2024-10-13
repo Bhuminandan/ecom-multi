@@ -23,7 +23,7 @@ public class Wishlist extends BaseEntity {
     Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @PrimaryKeyJoinColumn(name = "user_id")
     User user;
 
     @ManyToMany

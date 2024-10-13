@@ -24,7 +24,7 @@ public class Transaction extends BaseEntity {
     User customer;
 
     @OneToOne
-    @Column(name = "order_id", nullable = false)
+    @PrimaryKeyJoinColumn(name = "order_id")
     Order order;
 
     @ManyToOne
