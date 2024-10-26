@@ -1,4 +1,4 @@
-package com.zinum.common.response;
+package com.zinum.dto.response;
 
 import lombok.Data;
 

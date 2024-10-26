@@ -1,0 +1,7 @@
+package com.zinum.config;
+
+import jakarta.servlet.Filter;
+
+public class JwtTokenValidator implements Filter {
+
+}

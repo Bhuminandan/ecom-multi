@@ -49,7 +49,8 @@ public class Product extends BaseEntity {
     @ElementCollection
     List<String> images = new ArrayList<>();
 
-    int numOfRatings;
+    @Column(name = "num_of_ratings")
+    int numOfRatings = 0;
 
     @Column(name = "sizes")
     String sizes;
