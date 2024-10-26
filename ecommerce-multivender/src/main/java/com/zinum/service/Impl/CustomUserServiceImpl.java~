@@ -52,7 +52,7 @@ public class CustomUserServiceImpl  implements UserDetailsService {
             role = UserRoles.ROLE_CUSTOMER;
         }
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority(role.toString()));
+        list.add(new SimpleGrantedAuthority("ROLE_" + role.toString()));
         return new org.springframework.security.core.userdetails.User(username, password, list);
     }
 }

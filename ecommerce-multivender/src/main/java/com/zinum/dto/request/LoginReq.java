@@ -6,11 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignupReq {
+public class LoginReq {
+
     String email;
-    String password;
-    String firstName;
-    String lastName;
-    String mobile;
     String otp;
 }

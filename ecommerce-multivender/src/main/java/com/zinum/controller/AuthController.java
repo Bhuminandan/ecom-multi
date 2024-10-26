@@ -1,9 +1,11 @@
 package com.zinum.controller;
 
+import com.zinum.dto.request.LoginReq;
 import com.zinum.dto.request.SignupReq;
+import com.zinum.dto.response.ApiResponse;
 import com.zinum.dto.response.AuthRes;
 import com.zinum.enums.UserRoles;
-import com.zinum.model.User;
+import com.zinum.model.VerificationCode;
 import com.zinum.repository.UserRepository;
 import com.zinum.service.Impl.AuthServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,28 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthRes> createUserHandler(@RequestBody SignupReq signupReq) {
+    public ResponseEntity<AuthRes> createUserHandler(@RequestBody SignupReq signupReq) throws Exception {
         String jwt = authService.createUser(signupReq);
         AuthRes res = new AuthRes();
         res.setJwt(jwt);
         res.setMessage("User created successfully");
         res.setRole(UserRoles.ROLE_CUSTOMER);
         return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/signing")
+    public ResponseEntity<AuthRes> signinHandler(@RequestBody LoginReq loginReq) throws Exception {
+        AuthRes res = authService.signin(loginReq);
+        return ResponseEntity.ok(res);
+    }
+
+
+    @PostMapping("/verification/send-otp")
+    public ResponseEntity<ApiResponse> sendOtpHandler(@RequestBody VerificationCode req) throws Exception {
+        authService.sendOtpVerificationEmail(req.getEmail());
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("OTP sent successfully");
+        return ResponseEntity.ok(apiResponse);
     }
 
 }
