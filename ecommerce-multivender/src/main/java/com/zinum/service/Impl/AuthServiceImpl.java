@@ -7,9 +7,11 @@ import com.zinum.dto.request.SignupReq;
 import com.zinum.dto.response.AuthRes;
 import com.zinum.enums.UserRoles;
 import com.zinum.model.Cart;
+import com.zinum.model.Seller;
 import com.zinum.model.User;
 import com.zinum.model.VerificationCode;
 import com.zinum.repository.CartRepository;
+import com.zinum.repository.SellerRepository;
 import com.zinum.repository.UserRepository;
 import com.zinum.repository.VerificationCodeRepository;
 import com.zinum.service.AuthService;
@@ -40,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
     private final VerificationCodeRepository verificationCodeRepository;
     private final EmailServiceImpl emailService;
     private final CustomUserServiceImpl customUserServiceImpl;
+    private final SellerRepository sellerRepository;
 
     @Autowired
     public AuthServiceImpl(
@@ -49,7 +52,8 @@ public class AuthServiceImpl implements AuthService {
                CartRepository cartRepository,
                VerificationCodeRepository verificationCodeRepository,
                EmailServiceImpl emailService,
-               CustomUserServiceImpl customUserServiceImpl
+               CustomUserServiceImpl customUserServiceImpl,
+               SellerRepository sellerRepository
     )
     {
         this.userRepository = userRepository;
@@ -59,18 +63,27 @@ public class AuthServiceImpl implements AuthService {
         this.verificationCodeRepository = verificationCodeRepository;
         this.emailService = emailService;
         this.customUserServiceImpl = customUserServiceImpl;
+        this.sellerRepository = sellerRepository;
     }
 
     @Override
-    public void sendOtpVerificationEmail(String email) {
-        String SIGNING_PREFIX = "signing-";
+    public void sendOtpVerificationEmail(String email, UserRoles role) {
+        String SIGNING_PREFIX = "signing_";
+        String SELLER_PREFIX = "seller_";
 
         if(email.startsWith(SIGNING_PREFIX)) {
             email = email.replace(SIGNING_PREFIX, "");
-            User user = userRepository.findByEmail(email);
 
-            if(user == null) {
-                throw new RuntimeException("User not found");
+            if(role.equals(UserRoles.ROLE_SELLER)) {
+                Seller seller = sellerRepository.findByEmail(email);
+                if(seller == null){
+                    throw new RuntimeException("Seller not found");
+                }
+            } else {
+                User user = userRepository.findByEmail(email);
+                if(user == null) {
+                    throw new RuntimeException("User not found");
+                }
             }
         }
 

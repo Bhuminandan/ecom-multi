@@ -3,16 +3,21 @@ package com.zinum.service.Impl;
 import com.zinum.service.EmailService;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
+
+    @Autowired
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void sendOtpVerificationEmail(String email, String otp, String subject, String body) {
