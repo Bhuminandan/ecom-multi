@@ -25,7 +25,7 @@ public class Coupon extends BaseEntity {
 
     String code;
 
-    @Column(name = "discount", nullable = false)
+    @Column(name = "discount")
     double discountPercentage;
 
     @Column(name = "validity_start_date", nullable = false)

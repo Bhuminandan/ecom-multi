@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "addresses")
+@Table(name = "deals")
 public class Deal extends BaseEntity {
 
     @Id
@@ -19,7 +19,7 @@ public class Deal extends BaseEntity {
     @Column(name = "id", nullable = false)
     Long id;
 
-    @Column(name = "discount", nullable = false)
+    @Column(name = "discount")
     Integer discount;
 
     @OneToOne

@@ -16,6 +16,7 @@ import com.zinum.repository.UserRepository;
 import com.zinum.repository.VerificationCodeRepository;
 import com.zinum.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
@@ -68,14 +70,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void sendOtpVerificationEmail(String email, UserRoles role) {
+        log.info("Inside sendOtpVerificationEmail>>>>>>: {}", email);
         String SIGNING_PREFIX = "signing_";
-        String SELLER_PREFIX = "seller_";
 
         if(email.startsWith(SIGNING_PREFIX)) {
             email = email.replace(SIGNING_PREFIX, "");
 
             if(role.equals(UserRoles.ROLE_SELLER)) {
+                log.info("Inside sendOtpVerificationEmail ROLE_SELLER>>>>>>: {}", email);
                 Seller seller = sellerRepository.findByEmail(email);
+                log.info("Seller>>>>: {}", seller);
                 if(seller == null){
                     throw new RuntimeException("Seller not found");
                 }
@@ -106,10 +110,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String createUser(SignupReq signupReq) throws Exception {
 
-        VerificationCode verificationCode = verificationCodeRepository.findByEmail(signupReq.getEmail());
-        if (verificationCode == null || !verificationCode.getCode().equals(signupReq.getOtp())) {
-            throw new Exception("Verification code not found");
-        }
+//        VerificationCode verificationCode = verificationCodeRepository.findByEmail(signupReq.getEmail());
+//        if (verificationCode == null || !verificationCode.getCode().equals(signupReq.getOtp())) {
+//            throw new Exception("Verification code not found");
+//        }
 
         User user = userRepository.findByEmail(signupReq.getEmail());
         if (user == null) {
@@ -143,7 +147,8 @@ public class AuthServiceImpl implements AuthService {
     public AuthRes signin(LoginReq loginReq) throws Exception {
         String username = loginReq.getEmail();
         String otp = loginReq.getOtp();
-
+        log.info("Logging in username>>>>>>: {}", username);
+        log.info("Logging in otp>>>>>>: {}", otp);
         Authentication authentication = authenticate(username, otp);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
@@ -157,19 +162,17 @@ public class AuthServiceImpl implements AuthService {
         return res;
     }
 
-
-
     private Authentication authenticate(String username, String otp) throws Exception {
         UserDetails userDetails = customUserServiceImpl.loadUserByUsername(username);
-
+        log.info("User details before auth>>>>>>: {}", userDetails);
         if(userDetails == null) {
             throw new BadCredentialsException("Invalid email");
         }
-
-        VerificationCode verificationCode = verificationCodeRepository.findByEmail(username);
+        VerificationCode verificationCode = verificationCodeRepository.findByEmail(userDetails.getUsername());
         if (verificationCode == null || !verificationCode.getCode().equals(otp)) {
             throw new BadCredentialsException("Invalid otp");
         }
+        log.info("User details>>>>>>: {}", userDetails);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 

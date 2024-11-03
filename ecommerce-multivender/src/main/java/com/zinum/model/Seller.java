@@ -1,5 +1,6 @@
 package com.zinum.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zinum.enums.AccountStatus;
 import com.zinum.enums.UserRoles;
 import jakarta.persistence.*;
@@ -43,12 +44,14 @@ public class Seller extends BaseEntity {
     String GSTIN;
 
     @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
     UserRoles role = UserRoles.ROLE_SELLER;
 
     @Column(name = "is_verified", nullable = false)
     boolean isVerified = false;
 
     @Column(name = "account_status", nullable = false)
+    @Enumerated(EnumType.STRING)
     AccountStatus accountStatus = AccountStatus.PENDING_VERIFICATION;
 
     @Embedded
@@ -57,14 +60,13 @@ public class Seller extends BaseEntity {
     @Embedded
     BankDetails bankDetails = new BankDetails();
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    Address pickupAddress = new Address();
+    @OneToOne(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    Address pickupAddress;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Transaction> transactions = new HashSet<>() ;
-
 }

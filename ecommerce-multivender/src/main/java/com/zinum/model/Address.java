@@ -1,9 +1,13 @@
 package com.zinum.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.zinum.enums.AddressTypes;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -51,7 +55,11 @@ public class Address extends BaseEntity {
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    Order order;
+    @OneToOne
+    @JoinColumn(name = "seller_id")
+    @JsonBackReference
+    Seller seller;
+
+    @OneToMany(mappedBy = "shippingAddress")
+    Set<Order> orders = new HashSet<>();
 }

@@ -5,6 +5,7 @@ import com.zinum.model.Seller;
 import com.zinum.model.User;
 import com.zinum.repository.SellerRepository;
 import com.zinum.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class CustomUserServiceImpl  implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -31,14 +33,19 @@ public class CustomUserServiceImpl  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("Inside loadUserByUsername>>>>>>: {}", username);
         if(username.startsWith(SELLER_PREFIX)){
+            log.info("Inside loadUserByUsername if>>>>>>: {}", username);
             String sellerEmail = username.substring(SELLER_PREFIX.length());
+            log.info("Inside loadUserByUsername if sellerEmail>>>>>>: {}", sellerEmail);
             Seller seller = sellerRepository.findByEmail(sellerEmail);
+            log.info("Inside loadUserByUsername if seller>>>>>>: {}", seller);
             if(seller == null){
                 throw new UsernameNotFoundException("Seller not found");
             }
             return buildUserDetails(seller.getEmail(), seller.getPassword(), seller.getRole());
         } else {
+            log.info("Inside loadUserByUsername else>>>>>>: {}", username);
             User user = userRepository.findByEmail(username);
             if(user == null){
                 throw new UsernameNotFoundException("User not found");

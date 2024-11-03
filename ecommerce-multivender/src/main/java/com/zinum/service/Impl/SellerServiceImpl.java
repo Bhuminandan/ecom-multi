@@ -8,12 +8,14 @@ import com.zinum.model.Seller;
 import com.zinum.repository.AddressRepository;
 import com.zinum.repository.SellerRepository;
 import com.zinum.service.SellerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class SellerServiceImpl implements SellerService {
 
     private final SellerRepository sellerRepository;
@@ -41,24 +43,31 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public Seller createSeller(Seller seller) {
+        log.info("Saving seller: {}", seller);
         Seller sellerExists = sellerRepository.findByEmail(seller.getEmail());
         if (sellerExists != null) {
             throw new RuntimeException("Seller already exists");
         }
-        Address savedAddress = addressRepository.save(seller.getPickupAddress());
+
         Seller newSeller = new Seller();
         newSeller.setFirstName(seller.getFirstName());
         newSeller.setLastName(seller.getLastName());
         newSeller.setEmail(seller.getEmail());
         newSeller.setMobile(seller.getMobile());
-        newSeller.setPickupAddress(savedAddress);
         newSeller.setPassword(passwordEncoder.encode(seller.getPassword()));
         newSeller.setRole(UserRoles.ROLE_SELLER);
-        newSeller.setAccountStatus(AccountStatus.ACTIVE);
         newSeller.setGSTIN(seller.getGSTIN());
         newSeller.setBankDetails(seller.getBankDetails());
         newSeller.setBusinessDataDetails(seller.getBusinessDataDetails());
-        return sellerRepository.save(seller);
+
+        Address pickupAddress = seller.getPickupAddress();
+        if (pickupAddress != null) {
+            pickupAddress.setSeller(newSeller);
+            newSeller.setPickupAddress(pickupAddress);
+        }
+
+        log.info("Saving seller: {}", newSeller);
+        return sellerRepository.save(newSeller);
     }
 
     @Override
@@ -151,6 +160,7 @@ public class SellerServiceImpl implements SellerService {
     public Seller verifySellerEmail(String email, String code) {
         Seller seller = this.getSellerByEmail(email);
         seller.setVerified(true);
+        seller.setAccountStatus(AccountStatus.ACTIVE);
         return sellerRepository.save(seller);
     }
 

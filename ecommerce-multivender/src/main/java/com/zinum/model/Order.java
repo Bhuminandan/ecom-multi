@@ -65,7 +65,7 @@ public class Order extends BaseEntity{
     List<OrderItem> orderItems = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "shipping_address_id")
     Address shippingAddress;
 
     @ManyToOne

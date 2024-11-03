@@ -23,12 +23,12 @@ public class HomeCategory extends BaseEntity {
     @Column( name = "name", nullable = false)
     String name;
 
-    @Column( name = "image", nullable = false)
+    @Column( name = "image")
     String image;
 
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "category_id")
     Long categoryId;
 
-    @Column(name = "home_category_section", nullable = false)
+    @Column(name = "home_category_section")
     HomeCategorySection homeCategorySection;
 }
