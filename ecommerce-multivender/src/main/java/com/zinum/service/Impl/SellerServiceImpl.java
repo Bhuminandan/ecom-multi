@@ -3,6 +3,7 @@ package com.zinum.service.Impl;
 import com.zinum.config.JwtProvider;
 import com.zinum.enums.AccountStatus;
 import com.zinum.enums.UserRoles;
+import com.zinum.exception.SellerException;
 import com.zinum.model.Address;
 import com.zinum.model.Seller;
 import com.zinum.repository.AddressRepository;
@@ -71,12 +72,8 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Seller getSellerById(Long id) {
-        Seller seller = sellerRepository.findById(id).orElse(null);
-        if (seller == null) {
-            throw new RuntimeException("Seller not found");
-        }
-        return seller;
+    public Seller getSellerById(Long id) throws SellerException {
+        return sellerRepository.findById(id).orElseThrow(() -> new SellerException("Seller not found"));
     }
 
     @Override
@@ -94,7 +91,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Seller updateSeller(Long id, Seller seller) {
+    public Seller updateSeller(Long id, Seller seller) throws SellerException {
 
         Seller existingSeller = this.getSellerById(id);
 
@@ -151,7 +148,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public void deleteSeller(Long id) {
+    public void deleteSeller(Long id) throws SellerException {
         Seller seller = this.getSellerById(id);
         sellerRepository.delete(seller);
     }
@@ -165,7 +162,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Seller updateSellerAccountStatus(Long sellerId, AccountStatus accountStatus) {
+    public Seller updateSellerAccountStatus(Long sellerId, AccountStatus accountStatus) throws SellerException {
         Seller seller = this.getSellerById(sellerId);
         seller.setAccountStatus(accountStatus);
         return sellerRepository.save(seller);

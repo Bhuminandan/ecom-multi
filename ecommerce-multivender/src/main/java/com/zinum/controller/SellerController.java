@@ -5,6 +5,7 @@ import com.zinum.config.JwtProvider;
 import com.zinum.dto.request.LoginReq;
 import com.zinum.dto.response.AuthRes;
 import com.zinum.enums.AccountStatus;
+import com.zinum.exception.SellerException;
 import com.zinum.model.Seller;
 import com.zinum.model.VerificationCode;
 import com.zinum.repository.VerificationCodeRepository;
@@ -68,7 +69,7 @@ public class SellerController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) {
+    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) throws SellerException {
         Seller seller = sellerService.getSellerById(id);
         return ResponseEntity.ok(seller);
     }
@@ -99,7 +100,7 @@ public class SellerController {
     @PatchMapping
     public ResponseEntity<Seller> updateSeller(
             @RequestHeader("Authorization") String token,
-           @RequestBody Seller seller) {
+           @RequestBody Seller seller) throws SellerException {
         Seller profile = sellerService.getSellerProfile(token);
         seller.setId(profile.getId());
         Seller updatedSeller = sellerService.updateSeller(profile.getId(), seller);
@@ -107,7 +108,7 @@ public class SellerController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) throws SellerException {
         sellerService.deleteSeller(id);
         return ResponseEntity.noContent().build();
     }

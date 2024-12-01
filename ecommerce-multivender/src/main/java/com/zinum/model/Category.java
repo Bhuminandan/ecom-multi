@@ -1,5 +1,6 @@
 package com.zinum.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -31,6 +32,7 @@ public class Category extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @JsonBackReference
     Category parentCategory;
 
 }

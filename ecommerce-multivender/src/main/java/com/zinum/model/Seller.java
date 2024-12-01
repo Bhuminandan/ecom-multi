@@ -1,5 +1,6 @@
 package com.zinum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zinum.enums.AccountStatus;
 import com.zinum.enums.UserRoles;
@@ -65,6 +66,7 @@ public class Seller extends BaseEntity {
     Address pickupAddress;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)

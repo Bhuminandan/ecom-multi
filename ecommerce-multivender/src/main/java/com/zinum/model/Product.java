@@ -1,5 +1,6 @@
 package com.zinum.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -67,5 +68,6 @@ public class Product extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
+    @JsonBackReference
     Seller seller;
 }
