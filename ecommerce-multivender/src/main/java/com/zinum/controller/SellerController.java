@@ -5,6 +5,7 @@ import com.zinum.config.JwtProvider;
 import com.zinum.dto.request.LoginReq;
 import com.zinum.dto.response.AuthRes;
 import com.zinum.enums.AccountStatus;
+import com.zinum.enums.UserRoles;
 import com.zinum.exception.SellerException;
 import com.zinum.model.Seller;
 import com.zinum.model.VerificationCode;
@@ -32,17 +33,16 @@ public class SellerController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthRes> loginSeller(@RequestBody LoginReq loginReq) throws Exception {
-        String otp = loginReq.getOtp();
         String email = loginReq.getEmail();
         loginReq.setEmail("seller_" + email);
         log.info("Logging in seller>>>>>>>>>>>>: {}", loginReq);
-        AuthRes res = authService.signin(loginReq);
+        AuthRes res = authService.signin(loginReq, UserRoles.ROLE_SELLER);
         return ResponseEntity.ok(res);
     }
 
     @PatchMapping("/verify/{otp}")
     public ResponseEntity<Seller> verifySellerEmail(@PathVariable String otp) {
-        VerificationCode verificationCode = verificationCodeRepository.findByCode(otp);
+        VerificationCode verificationCode = verificationCodeRepository.findByCodeAndUserType(otp, UserRoles.ROLE_SELLER);
         if (verificationCode == null || !verificationCode.getCode().equals(otp)) {
             throw new RuntimeException("Invalid OTP");
         }
@@ -58,6 +58,7 @@ public class SellerController {
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setCode(otp);
         verificationCode.setEmail(seller.getEmail());
+        verificationCode.setUserType(UserRoles.ROLE_SELLER);
         verificationCodeRepository.save(verificationCode);
 
         String subject = "Email verification code";

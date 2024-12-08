@@ -99,6 +99,7 @@ public class AuthServiceImpl implements AuthService {
         String Otp = OtpUtil.generateOtp();
         verificationCode.setCode(Otp);
         verificationCode.setEmail(email);
+        verificationCode.setUserType(role);
         verificationCodeRepository.save(verificationCode);
 
         String subject = "ECOM: OTP Verification";
@@ -110,10 +111,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String createUser(SignupReq signupReq) throws Exception {
 
-//        VerificationCode verificationCode = verificationCodeRepository.findByEmail(signupReq.getEmail());
-//        if (verificationCode == null || !verificationCode.getCode().equals(signupReq.getOtp())) {
-//            throw new Exception("Verification code not found");
-//        }
+        VerificationCode verificationCode = verificationCodeRepository.findByEmailAndUserType(signupReq.getEmail(), UserRoles.ROLE_CUSTOMER);
+        if (verificationCode == null || !verificationCode.getCode().equals(signupReq.getOtp())) {
+            throw new Exception("Verification code not found");
+        }
 
         User user = userRepository.findByEmail(signupReq.getEmail());
         if (user == null) {
@@ -144,12 +145,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthRes signin(LoginReq loginReq) throws Exception {
+    public AuthRes signin(LoginReq loginReq, UserRoles role) throws Exception {
         String username = loginReq.getEmail();
         String otp = loginReq.getOtp();
         log.info("Logging in username>>>>>>: {}", username);
         log.info("Logging in otp>>>>>>: {}", otp);
-        Authentication authentication = authenticate(username, otp);
+        Authentication authentication = authenticate(username, otp, role);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
 
@@ -162,13 +163,13 @@ public class AuthServiceImpl implements AuthService {
         return res;
     }
 
-    private Authentication authenticate(String username, String otp) throws Exception {
+    private Authentication authenticate(String username, String otp, UserRoles role) throws Exception {
         UserDetails userDetails = customUserServiceImpl.loadUserByUsername(username);
         log.info("User details before auth>>>>>>: {}", userDetails);
         if(userDetails == null) {
             throw new BadCredentialsException("Invalid email");
         }
-        VerificationCode verificationCode = verificationCodeRepository.findByEmail(userDetails.getUsername());
+        VerificationCode verificationCode = verificationCodeRepository.findByEmailAndUserType(userDetails.getUsername(), role);
         if (verificationCode == null || !verificationCode.getCode().equals(otp)) {
             throw new BadCredentialsException("Invalid otp");
         }

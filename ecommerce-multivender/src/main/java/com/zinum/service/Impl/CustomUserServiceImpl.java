@@ -24,6 +24,7 @@ public class CustomUserServiceImpl  implements UserDetailsService {
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
     private static final String SELLER_PREFIX = "seller_";
+    private static final String USER_PREFIX = "customer_";
 
     @Autowired
     public CustomUserServiceImpl(UserRepository userRepository, SellerRepository sellerRepository) {
@@ -35,18 +36,16 @@ public class CustomUserServiceImpl  implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("Inside loadUserByUsername>>>>>>: {}", username);
         if(username.startsWith(SELLER_PREFIX)){
-            log.info("Inside loadUserByUsername if>>>>>>: {}", username);
             String sellerEmail = username.substring(SELLER_PREFIX.length());
-            log.info("Inside loadUserByUsername if sellerEmail>>>>>>: {}", sellerEmail);
             Seller seller = sellerRepository.findByEmail(sellerEmail);
-            log.info("Inside loadUserByUsername if seller>>>>>>: {}", seller);
             if(seller == null){
                 throw new UsernameNotFoundException("Seller not found");
             }
             return buildUserDetails(seller.getEmail(), seller.getPassword(), seller.getRole());
         } else {
             log.info("Inside loadUserByUsername else>>>>>>: {}", username);
-            User user = userRepository.findByEmail(username);
+            String userEmail = username.substring(USER_PREFIX.length());
+            User user = userRepository.findByEmail(userEmail);
             if(user == null){
                 throw new UsernameNotFoundException("User not found");
             }

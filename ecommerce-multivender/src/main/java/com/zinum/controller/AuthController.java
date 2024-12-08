@@ -41,7 +41,7 @@ public class AuthController {
 
     @PostMapping("/signing")
     public ResponseEntity<AuthRes> signinHandler(@RequestBody LoginReq loginReq) throws Exception {
-        AuthRes res = authService.signin(loginReq);
+        AuthRes res = authService.signin(loginReq, UserRoles.ROLE_CUSTOMER);
         return ResponseEntity.ok(res);
     }
 

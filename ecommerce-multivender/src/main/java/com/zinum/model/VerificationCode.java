@@ -1,5 +1,6 @@
 package com.zinum.model;
 
+import com.zinum.enums.UserRoles;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -32,4 +33,8 @@ public class VerificationCode extends BaseEntity {
     @OneToOne
     @PrimaryKeyJoinColumn(name = "seller_id")
     Seller seller;
+
+    @Column(name = "user_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    UserRoles userType = UserRoles.ROLE_CUSTOMER;
 }
